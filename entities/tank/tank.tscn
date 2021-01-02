@@ -1,10 +1,76 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://entities/tank/tank.gd" type="Script" id=1]
 [ext_resource path="res://assets/sprites/battletanks.png" type="Texture" id=2]
 
 [sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 8, 8 )
+extents = Vector2( 7, 7 )
+
+[sub_resource type="Animation" id=4]
+resource_name = "Death"
+length = 0.61
+tracks/0/type = "value"
+tracks/0/path = NodePath("LargeExplosion:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0.3, 0.4, 0.5 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 0 ]
+}
+tracks/1/type = "method"
+tracks/1/path = NodePath(".")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0.6 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "on_death_anim_end"
+} ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("LargeExplosion:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.3, 0.6 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 1,
+"values": [ false, true, false ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("SmallExplosion:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0, 0.3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("SmallExplosion:frame")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2 ]
+}
 
 [sub_resource type="Animation" id=2]
 resource_name = "Move"
@@ -62,5 +128,22 @@ region_rect = Rect2( 0, 0, 256, 256 )
 shape = SubResource( 1 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/Death = SubResource( 4 )
 anims/Move = SubResource( 2 )
 anims/idle = SubResource( 3 )
+
+[node name="LargeExplosion" type="Sprite" parent="."]
+visible = false
+texture = ExtResource( 2 )
+hframes = 2
+region_enabled = true
+region_rect = Rect2( 305, 128, 64, 32 )
+
+[node name="SmallExplosion" type="Sprite" parent="."]
+visible = false
+texture = ExtResource( 2 )
+hframes = 3
+region_enabled = true
+region_rect = Rect2( 257, 128, 48, 16 )
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]

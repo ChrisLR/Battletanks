@@ -5,6 +5,11 @@ var ActionButtonEnum = load("res://scripts/ActionButtonEnum.gd").ActionButtonEnu
 var Direction = Global.Direction
 var BulletClass = preload("res://entities/bullet/bullet.tscn")
 
+# PRELOAD SOUNDS
+var SoundEnemyTankExplosion = preload("res://assets/sounds/enemytank_explode.wav")
+var SoundPlayerTankExplosion = preload("res://assets/sounds/playertank_explode.wav")
+var SoundFireBullet = preload("res://assets/sounds/bullet_fire.wav")
+
 enum TankColor {
 	Yellow = 0
 	Green = 1
@@ -30,11 +35,11 @@ const HealthMap = {
 	TankType.Power: 1,
 	TankType.Armor: 4,
 }
-const SpeedMap = {	  # Players are always at least speed 2
-	TankType.Basic: 1,
-	TankType.Fast: 3,
-	TankType.Power: 2,
-	TankType.Armor: 2,
+const SpeedMap = {	  # Players are always at least speed 1
+	TankType.Basic: 0.5,
+	TankType.Fast: 1.5,
+	TankType.Power: 1,
+	TankType.Armor: 1,
 }
 const FireRate = {
 	TankType.Basic: 5,
@@ -56,6 +61,8 @@ var TimesDamaged = 0
 var shootDelay = 0
 var shotBullet = null
 
+var dead = false
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	animOffset = get_anim_offset()
@@ -66,6 +73,9 @@ func _ready():
 #	pass
 
 func _physics_process(delta):
+	if dead:
+		return
+		
 	move_and_collide(motion)
 	if shootDelay > 0:
 		shootDelay -= delta
@@ -98,8 +108,8 @@ func update_frame(animFrame):
 func _move(_direction):
 	var _update_anim = false
 	var _moveSpeed = SpeedMap[tank_type]
-	if isPlayer and _moveSpeed < 2:
-		_moveSpeed = 2
+	if isPlayer and _moveSpeed < 1:
+		_moveSpeed = 1
 	
 	if _direction != direction:
 		_update_anim = true
@@ -141,6 +151,9 @@ func shoot():
 	else:
 		shootDelay = FireRate[tank_type]
 	
+	$AudioStreamPlayer.stream = SoundFireBullet
+	$AudioStreamPlayer.play()
+	
 
 func idle():
 	$AnimationPlayer.play("idle")
@@ -148,6 +161,9 @@ func idle():
 
 
 func handle_key_pressed(key_presses):
+	if dead:
+		return
+		
 	if ActionButtonEnum.Up in key_presses:
 		move_north()
 	elif ActionButtonEnum.Right in key_presses:
@@ -164,8 +180,23 @@ func handle_key_pressed(key_presses):
 
 func on_hit():
 	TimesDamaged += 1
-	if TimesDamaged > HealthMap[tank_type]:
+	if TimesDamaged >= HealthMap[tank_type]:
 		on_death()
 
 func on_death():
-	pass
+	dead = true
+	$CollisionShape2D.set_deferred('disabled', true)
+	$Sprite.visible = false
+	$AnimationPlayer.play("Death")
+	if isPlayer:
+		$AudioStreamPlayer.stream = SoundPlayerTankExplosion
+	else:
+		$AudioStreamPlayer.stream = SoundEnemyTankExplosion
+	$AudioStreamPlayer.play()
+
+func on_death_anim_end():
+	if not isPlayer:
+		queue_free()
+	else:
+		# Must respawn, will reuse same object
+		pass

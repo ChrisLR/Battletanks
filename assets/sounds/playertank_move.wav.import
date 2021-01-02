@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/playertank_move.wav-243fcb5b98ad9c2ccd37bd420ba7cf10.sample"
+
+[deps]
+
+source_file="res://assets/sounds/playertank_move.wav"
+dest_files=[ "res://.import/playertank_move.wav-243fcb5b98ad9c2ccd37bd420ba7cf10.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0
