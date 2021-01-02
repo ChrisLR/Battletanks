@@ -76,7 +76,7 @@ func _physics_process(delta):
 	if dead:
 		return
 		
-	move_and_collide(motion)
+	var _collision = move_and_collide(motion)
 	if shootDelay > 0:
 		shootDelay -= delta
 	

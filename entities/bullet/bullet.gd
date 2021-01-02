@@ -11,11 +11,11 @@ var shooter = null
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	$Sprite.frame = direction
-	connect("body_entered", self, "_on_hit")
-	connect("area_entered", self, "_on_hit")
+	var _s = connect("body_entered", self, "_on_hit")
+	_s = connect("area_entered", self, "_on_hit")
 
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	if hasHit:
 		return
 	
