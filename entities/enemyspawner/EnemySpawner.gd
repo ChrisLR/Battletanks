@@ -3,6 +3,7 @@ extends Area2D
 
 var colliding = false
 var tankClass = preload("res://entities/tank/tank.tscn")
+var tankAIClass = preload("res://scripts/AITankController.gd")
 
 
 
@@ -19,6 +20,11 @@ func spawn(tank_color, tank_type):
 	tank.position = self.position
 	tank.tank_color = tank_color
 	tank.tank_type = tank_type
+	
+	var tankAI = tankAIClass.new()
+	tankAI.host = tank
+	tank.controller = tankAI
+	
 	get_parent().add_child(tank)
 	tank.update_frame(0)
 

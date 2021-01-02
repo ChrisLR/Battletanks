@@ -51,6 +51,7 @@ const FireRate = {
 export var tank_color = TankColor.Yellow
 export var tank_type = TankType.Basic
 export var isPlayer = false
+var controller = null
 
 var animOffset = 0
 var direction = Direction.North
@@ -75,6 +76,9 @@ func _ready():
 func _physics_process(delta):
 	if dead:
 		return
+	
+	if not isPlayer and controller:
+		controller._process(delta)
 		
 	var _collision = move_and_collide(motion)
 	if shootDelay > 0:
