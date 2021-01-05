@@ -4,7 +4,7 @@ var PlayerController = load("res://scripts/PlayerController.gd")
 
 var controllers = []
 
-var delayUntilSpawn = 5
+var delayUntilSpawn = 500
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

@@ -149,7 +149,7 @@ func shoot():
 	shotBullet = newBullet
 	
 	get_parent().add_child(newBullet)
-	newBullet.position = position + Global.DirectionVector[direction] * 16
+	newBullet.position = position + Global.DirectionVector[direction] * 4
 	if isPlayer:
 		shootDelay = 1
 	else:
