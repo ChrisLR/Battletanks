@@ -34,7 +34,9 @@ func _on_hit(body):
 		body.on_hit()
 	
 	if body is TileMap:
-		_destroy_blocks(body)
+		if not _destroy_blocks(body):
+			return
+			
 		
 	$Sprite.visible = false
 	$Hit.visible = true
@@ -47,9 +49,10 @@ func on_destroy():
 	queue_free()
 
 func _destroy_blocks(tile_map):
+	var anyCollisions = false
 	var rect = Rect2(position, $CollisionShape2D.shape.extents)
-	for x in range(rect.position.x - 8, rect.end.x + 4, 4):
-		for y in range(rect.position.y - 8, rect.end.y + 4, 4):
+	for x in range(rect.position.x - 4, rect.end.x + 4, 2):
+		for y in range(rect.position.y - 4, rect.end.y + 4, 2):
 			var tilePos = tile_map.world_to_map(Vector2(x, y))
 			var tileNo = tile_map.get_cellv(tilePos)
 			if tileNo == -1:
@@ -59,3 +62,7 @@ func _destroy_blocks(tile_map):
 			var tileName = tile_set.tile_get_name(tileNo)
 			if tileName == 'WallBrick':
 				tile_map.set_cellv(tilePos, -1)
+			if tileName != 'Water':
+				anyCollisions = true
+				
+	return anyCollisions
